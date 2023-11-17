@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./tailwind.generated.css" />
+    <link
+      rel="stylesheet"
+      href="font-awesome.css"
+     
+    />
+    <style>
+        footer {
+            margin: 0 0 2rem;
+        }
+        i.fab:hover {
+            opacity: 0.9;
+        }
+    </style>
+    <title>Kinan</title>
+  </head>
+
+  <body class="antialiased text-gray-700 bg-gray-100">
+    <div id="app" class="flex w-full h-screen justify-center items-center">
+      <div class="w-full max-w-5xl p-3">
+        <h1 class="font-bold text-5xl text-center text-indigo-700">
+          Kinan
+        </h1>
+        <div class="bg-white p-12 rounded-lg shadow-lg w-full mt-8">
+
+
+          <div v-if="start == 0" class="flex justify-around">
+              <div  @click="changeLang(0)" class="cursor-pointer  bg-indigo-600 text-white text-2xl  tracking-wide rounded px-16 py-10">English</div>
+              <div  @click="changeLang(1)" class="cursor-pointer  bg-indigo-600 text-white text-3xl  tracking-wide rounded px-16 py-10">عربي</div>
+          </div>
+
+          <div v-else>
+
+          <div v-if="idx < count" :class="lang==1 ? 'text-right' :''">
+            <p class="text-2xl font-bold">{{questions[lang][idx]['question']}}</p>
+            <label
+              v-for="(answer, index) in questions[lang][idx].answers"
+              :key="index"
+              :for="index"
+              class="block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg"
+              :class="{'hover:bg-gray-100 cursor-pointer' : selectedAnswer == ''}, {'bg-green-200' : index == questions[lang][idx].correctAnswer && selectedAnswer != ''}, {'bg-red-200' : selectedAnswer == index}"
+            >
+              <input
+                :id="index"
+                type="radio"
+                class="hidden"
+                :value="index"
+                @change="answered($event)"
+                :disabled="selectedAnswer != ''"
+              />
+              {{answer}}
+            </label>
+            <div class="mt-6 flow-root">
+
+              <div v-if="lang == 0">
+              <button 
+                @click="nextQuestion"
+                v-show="selectedAnswer != '' && idx < count - 1"
+                class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Next &gt;
+                
+              </button>
+            </div>
+              <div v-else>
+              <button 
+                @click="nextQuestion"
+                v-show="selectedAnswer != '' && idx < count - 1"
+                class="float-left bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+              &lt; التالي 
+                
+              </button>
+            </div>
+
+
+            <div v-if="lang == 0">
+              <button
+                @click="showResults"
+                v-show="selectedAnswer != '' && idx == count - 1"
+                class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Finish
+              </button>
+              </div>
+            <div v-else>
+              <button
+                @click="showResults"
+                v-show="selectedAnswer != '' && idx == count - 1"
+                class="float-left bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                نهاية
+              </button>
+              </div>
+
+
+
+            </div>
+          </div>
+          <div v-else>
+            <div class="flex" :class="lang ? 'justify-end' :'justify-start'">
+            <span v-if="lang == 0"><h2   class="text-bold text-3xl">Results</h2></span>
+            <span v-else><h2   class="text-bold text-3xl">النتيجة</h2></span>
+          </div>
+         
+            
+            <div class="flex  space-x-4 mt-6" :class="lang ? 'justify-end' :'justify-start'">
+              <p>
+               
+                <span v-if="lang == 0"> Correct Answers:</span>
+                <span v-else> الاجابات الصحيحة:</span>
+                <span class="text-2xl text-green-700 font-bold"
+                  >{{correctAnswers}}</span
+                >
+              </p>
+              <p>
+                <span v-if="lang == 0"> Wrong Answers:</span>
+                <span v-else> الاجابات الخاطئه:</span>
+               
+                <span class="text-2xl text-red-700 font-bold"
+                  >{{wrongAnswers}}</span
+                >
+              </p>
+            </div>
+            <div class="mt-6 flow-root">
+              <div v-if="lang == 0">
+              <button
+                @click="resetQuiz"
+                class="float-right bg-indigo-600 text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Play again
+              </button>
+            </div>
+        <div v-else>
+              <button
+                @click="resetQuiz"
+                class="float-left bg-indigo-600 text-white text-xl font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                إبدأ
+              </button>
+            </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        </div>
+      </div>
+    </div>
+   
+    <script src="./vue-global.js"></script>
+    <script src="./main.js"></script>
+    
+  </body>
+</html>
